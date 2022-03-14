@@ -1,0 +1,47 @@
+Database details:
+TABLE 1:
+    Title: Customer
+    Fields: C_id(PRIMARY KEY), C_FirstName, C_LastName, C_UserName, C_Password, C_Email, C_Street, C_City, C_State, C_Country
+
+TABLE 2:
+    Title: Vendor
+    Fields: v_id(PRIMARY KEY), v_Name, v_Number, v_Email. v_Street, v_City, v_State, v_Country, C_id(FOREIGN KEY) from Customer table 
+
+TABLE 3:
+    Title: Store
+    Fields: Store_id(PRIMARY KEY), Store_name, Store_Category, Store_ContactNo, Store_Street, Store_City, Store_State, Store_Country, Store_capacityUnits, v_id(FOREIGN KEY) from vendor table
+ 
+TABLE 4:
+    Title: Items
+    Fields: item_id(PRIMARY KEY), item_name, item_Category, item_UnitPrice, item_QuantityAvailable, item_weight, item_colour, item_brand, item_description, v_id(FOREIGN KEY), Store_id(FOREIGN KEY) from vendor and store table resepectively
+
+TABLE 5:
+    Title: Order
+    Fields: Order_ID(PRIMARY KEY), Order_Date, Order_Details, Order_Total, PaymentMethod, Billing_address, Shipping_address, item_id(FOREIGN KEY), Customer_id(FOREIGN KEY) from item and Customer table resepectively
+
+sqlite> .schema
+CREATE TABLE customer(c_id INTEGER PRIMARY KEY NOT NULL,c_FirstName TEXT,c_LastName TEXT,c_Number TEXT,c_UserName TEXT, c_Password TEXT, c_Email TEXT, c_Street VARCHAR(30),c_City TEXT, c_State TEXT, c_Country TEXT);
+
+CREATE TABLE sqlite_sequence(name,seq);
+
+CREATE TABLE vendor(v_id INTEGER PRIMARY KEY,v_Name TEXT,v_PhoneNumer INTEGER, v_Email TEXT,v_Street VARCHAR(30),v_City TEXT, v_State TEXT, v_Country TEXT, c_id, FOREIGN KEY(c_id) REFERENCES customer(c_id) ON DELETE CASCADE);
+
+CREATE TABLE store(store_id INTEGER PRIMARY KEY AUTOINCREMENT,store_name TEXT, store_Category TEXT, store_ContactNumber INTEGER, store_street VARCHAR(30),store_City TEXT, store_State TEXT,store_Country TEXT, store_capacityUnits INTEGER,v_id,FOREIGN KEY(v_id) REFERENCES vendor(v_id));
+
+CREATE TABLE items(item_id INTEGER PRIMARY KEY, item_Name TEXT, item_Category TEXT,item_UnitPrice INTEGER,item_QuantityAvailable INTEGER, item_Weight INTEGER, item_Color TEXT, item_brand TEXT, item_description VARCHAR(50),v_id,store_id, FOREIGN KEY(v_id) REFERENCES vendor(v_id), FOREIGN KEY(store_id) REFERENCES store(store_id));
+
+CREATE TABLE orders(Order_id INTEGER PRIMARY KEY,Order_Date TEXT,order_details VARCHAR(60),order_Total INTEGER, paymentMethod TEXT, Billing_address VARCHAR(60), shipping_address VARVHAR(60), item_id, c_id, FOREIGN KEY(item_id) REFERENCES items(item_id), FOREIGN KEY(c_id) REFERENCES customer(c_id));
+
+Design explanation:
+1.Every user is a Customer
+2.Every Customer is a vendor, one and only one Customer can be a vendor
+3.One and only one vendor can be a Customer
+4.One vendor should have at least one store, one vendor can have many Stores
+5.One store should have at least one vendor. 
+6.One store can have zero or many items.
+7.Every store should have at least one item.
+8.One item can be present one or many stores.
+9.Every Order should have at least one item.
+10.One order can have many items
+11.One item can be placed in one or many orders.
+12.One and only one Customer can have zero to many orders. 
